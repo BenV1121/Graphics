@@ -58,6 +58,11 @@ bool Context::getKey(int key)
 	return glfwGetKey(handle, key);
 }
 
+//void getMousePosition(double &x_out, double &y_out)
+//{
+//	return glfwGetCursorPos(0, x_out, y_out);
+//}
+
 //void Context::getMousePosition(double &x_out, double &y_out)
 //{
 //	return glfwCreateCursor();
