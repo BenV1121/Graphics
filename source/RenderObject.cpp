@@ -104,9 +104,9 @@ Shader makeShader(const char *vsource, const char *fsource)
 	if (success == GL_FALSE)
 	{
 		int length = 0;
-		glGetShaderiv(retval.handle, GL_INFO_LOG_LENGTH, &length);
+		glGetProgramiv(retval.handle, GL_INFO_LOG_LENGTH, &length);
 		char *log = new char[length];
-		glGetShaderInfoLog(retval.handle, length, 0, log);
+		glGetProgramInfoLog(retval.handle, length, 0, log);
 		std::cerr << log << std::endl;
 		assert(false && "Program failed to link!");
 		delete[] log;

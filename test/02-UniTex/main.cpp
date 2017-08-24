@@ -90,19 +90,22 @@ int main()
 		clearFramebuffer(f);
 		
 		setUniform(s, 0, (float) context.getTime());
-		//setUniform(s, 1, context.getKey(' '));
+		setUniform(s, 1, context.getKey(' '));
 		setUniform(s, 2, pos.x);
 		setUniform(s, 3, pos.y);
 
 		setUniform(s, 4, t_magyel, 0);
 		setUniform(s, 5, t_mask,   1);
 
+		//setUniform(s, time, pos, t_magyel, t_mask, tex1, tex2);
+
 		s0_draw(f, s, g);
 	}
 
 	freeGeometry(g);
 	freeShader(s);
-	//freeTexture(t);
+	freeTexture(t_magyel);
+	freeTexture(t_mask);
 
 	context.term();
 	return 0;
