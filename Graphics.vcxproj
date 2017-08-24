@@ -134,11 +134,13 @@
   <ItemGroup>
     <ClCompile Include="source\Context.cpp" />
     <ClCompile Include="source\draw.cpp" />
+    <ClCompile Include="source\Load.cpp" />
     <ClCompile Include="source\RenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\graphics\Context.h" />
     <ClInclude Include="include\graphics\draw.h" />
+    <ClInclude Include="include\graphics\Load.h" />
     <ClInclude Include="include\graphics\RenderObjects.h" />
     <ClInclude Include="include\graphics\Vertex.h" />
     <ClInclude Include="source\glinc.h" />
