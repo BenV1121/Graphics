@@ -11,8 +11,6 @@ void s0_draw(const Framebuffer &f,
 			 const Geometry &g);
 
 
-void clearFramebuffer(const Framebuffer &f);
-
 void setUniform(const Shader &s, int location, float value);
 void setUniform(const Shader &s, int location, int value);
 
@@ -43,3 +41,8 @@ void setUniforms(const Shader &s, int &loc_io, int &tex_io, const T &val)
 {
 	__internal::t_setUniform(s, loc_io, tex_io, val);
 }
+
+void clearFramebuffer(const Framebuffer &f, bool color = true, bool depth = true);
+
+enum RenderFlag{DEPTH = 1};
+void setFlags(int flags);

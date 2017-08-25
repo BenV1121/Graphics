@@ -31,12 +31,7 @@ void setUniform(const Shader &s, int location, int value)
 	glProgramUniform1i(s.handle, location, value);
 }
 
-void clearFramebuffer(const Framebuffer &f)
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, f.handle);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
+
 
 void setUniform(const Shader &s, int location, const Texture &value, unsigned slot)
 {
@@ -79,3 +74,17 @@ namespace __internal
 	}
 }
 
+void clearFramebuffer(const Framebuffer &f, bool color, bool depth)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, f.handle);
+	glClear(GL_COLOR_BUFFER_BIT * color | GL_DEPTH_BUFFER_BIT * depth);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void setFlags(int flags)
+{
+	// depth testing
+	if (flags & RenderFlag::DEPTH) 
+		glEnable(GL_DEPTH_TEST);
+	else glDisable(GL_DEPTH_TEST);
+}

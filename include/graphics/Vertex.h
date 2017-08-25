@@ -8,5 +8,5 @@ struct Vertex
 	glm::vec4 color;	// starting from 16, +4 floats = 32 bytes
 
 	glm::vec2 texCoord; //UV
-
+	glm::vec4 normal;
 };

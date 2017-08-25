@@ -59,6 +59,10 @@ std::string readFile(const char *filePath)
 Shader loadShader(const char *vpath, const char *fpath)
 {
 	Shader retval = { 0 };
+	if (vpath == nullptr || fpath == nullptr)
+	{
+		return retval;
+	}
 	std::string fvsource = readFile(vpath);
 	std::string ffsource = readFile(fpath);
 
@@ -68,6 +72,17 @@ Shader loadShader(const char *vpath, const char *fpath)
 	retval = makeShader(vsource, fsource);
 
 	return retval;
+}
+
+#include <random>
+glm::vec4 randColor()
+{
+	return
+	{
+		rand() / (float)RAND_MAX,
+		rand() / (float)RAND_MAX,
+		rand() / (float)RAND_MAX, 1
+	};
 }
 
 Geometry loadGeometry(const char *path)
@@ -80,20 +95,28 @@ Geometry loadGeometry(const char *path)
 
 	tinyobj::LoadObj(&attrib, &shapes, &materials, &err, path);
 
-	size_t vsize = attrib.vertices.size() / 3;
-	Vertex *verts = new Vertex[vsize];
-
-	for (size_t i = 0; i < vsize; ++i)
-	{
-		const float *p = &attrib.vertices[i * 3];
-		verts[i].position = {p[0], p[1], p[2], 1};
-	}
-
 	size_t isize = shapes[0].mesh.indices.size();
 	size_t *indices = new unsigned[isize];
 
+	size_t vsize = isize;
+	Vertex *verts = new Vertex[vsize];
+
 	for (size_t i = 0; i < isize; ++i)
-		indices[i] = shapes[0].mesh.indices[i].vertex_index;
+	{
+		indices[i] = i;
+
+		int pi = shapes[0].mesh.indices[i].vertex_index;
+		int ni = shapes[0].mesh.indices[i].normal_index;
+		int ti = shapes[0].mesh.indices[i].texcoord_index;
+
+		const float *p = &attrib.vertices[pi*3];
+		const float *n = &attrib.normals[ni * 3];
+		const float *t = &attrib.texcoords[ti * 2];
+
+		verts[i].position = { p[0],p[1],p[2],1 };
+		verts[i].texCoord = { t[0],t[1] };
+		verts[i].normal = { n[0],n[1],n[2],0 };
+	}
 
 	retval = makeGeometry(verts, vsize, indices, isize);
 
