@@ -9,8 +9,8 @@ layout (location = 1) uniform mat4 view;
 layout (location = 2) uniform mat4 model;
 
 out vec2 vUV;
-out vec4 vPos;
-out vec4 vNormal;
+out vec3 vPos;
+out vec3 vNormal;
 
 void main()
 {

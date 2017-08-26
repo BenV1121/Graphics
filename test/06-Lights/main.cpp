@@ -24,7 +24,7 @@ int main()
 	Shader lambert = loadShader("../../resources/shaders/lambert.vert",
 								"../../resources/shaders/lambert.frag");
 
-	Texture soil_diffuse = loadTexture("../../resources/textures/sand.jpeg");
+	Texture soil_diffuse = loadTexture("../../resources/textures/sand.jpg");
 
 	Framebuffer screen = { 0, 800, 600 };
 
