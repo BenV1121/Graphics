@@ -42,9 +42,9 @@ int main()
 		float time = context.getTime();
 
 		int frame = 3;
-		frame += context.getKey('W') * 3;
-		frame += context.getKey('A') * 2;
-		frame += context.getKey('D') * 1;
+		frame += context.getKey('A') * 3;
+		frame += context.getKey('D') * 2;
+		frame += context.getKey('W') * 1;
 		frame % 4;
 
 		x += context.getKey('D') * .016;
