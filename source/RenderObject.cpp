@@ -1,3 +1,4 @@
+#define GLM_FORCE_SWIZZLE
 #include "glinc.h"
 #include "..\include\graphics\RenderObjects.h"
 #include "..\include\graphics\Vertex.h"
@@ -5,6 +6,31 @@
 #ifdef _DEBUG
 #include <iostream>
 #endif
+
+glm::vec4 calcTangent(const Vertex &v0, const Vertex &v1, const Vertex &v2)
+{
+	glm::vec4 p1 = v1.position - v0.position;
+	glm::vec4 p2 = v2.position - v0.position;
+
+	glm::vec2 t1 = v1.texCoord - v0.texCoord;
+	glm::vec2 t2 = v2.texCoord - v0.texCoord;
+
+	return glm::normalize((p1*t2.y - p2*t1.y) / (t1.x*t2.y - t1.y*t2.x));
+}
+
+void solveTangents(Vertex *v, size_t vsize, const unsigned *idxs, size_t isize)
+{
+	for (int i = 0; i < isize; i += 3)
+	{
+		glm::vec4 T = calcTangent(v[idxs[i]], v[idxs[i+1]], v[idxs[i+2]]);
+
+		for (int j = 0; j < 3; ++j)
+			v[idxs[i + j]].tangent = glm::normalize(T + v[idxs[i+j]].tangent);
+	}
+
+	for (int i = 0; i < vsize; ++i)
+		v[i].bitangent = glm::vec4(glm::cross(v[i].normal.xyz(), v[i].tangent.xyz()),0);
+}
 
 Geometry makeGeometry(const Vertex *verts, size_t vsize,
 	const unsigned *idxs, size_t isize)
@@ -21,6 +47,8 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize,
 	glBindVertexArray(retval.handle);
 	glBindBuffer(GL_ARRAY_BUFFER, retval.ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, retval.vbo);
+
+
 
 	//Initialize all of our buffers
 	glBufferData(GL_ARRAY_BUFFER, vsize*sizeof(Vertex),
@@ -39,6 +67,12 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize,
 
 	glEnableVertexAttribArray(3); // color
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
+
+	glEnableVertexAttribArray(4); // color
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
+
+	glEnableVertexAttribArray(5); // color
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
