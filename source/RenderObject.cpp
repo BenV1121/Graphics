@@ -69,10 +69,10 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize,
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
 
 	glEnableVertexAttribArray(4); // color
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)56);
 
 	glEnableVertexAttribArray(5); // color
-	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)72);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -162,27 +162,57 @@ void freeShader(Shader &s)
 	s = { 0 };
 }
 
-Texture makeTexture(unsigned w, unsigned h, unsigned c, const unsigned char * pixels)
+//Texture makeTexture(unsigned w, unsigned h, unsigned c, const unsigned char * pixels)
+//{
+//	Texture retval{ 0 };
+//	
+//	unsigned f = 0;
+//	switch (c)
+//	{
+//	case 1: f = GL_RED;  break;
+//	case 2: f = GL_RG;   break;
+//	case 3: f = GL_RGB;  break;
+//	case 4: f = GL_RGBA; break;
+//	}
+//
+//	glGenTextures(1, &retval.handle);
+//	glBindTexture(GL_TEXTURE_2D, retval.handle);
+//
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//
+//	glTexImage2D(GL_TEXTURE_2D, 0, f, w, h, 0, f,
+//								GL_UNSIGNED_BYTE, pixels);
+//
+//	glBindTexture(GL_TEXTURE_2D, 0);
+//	return retval;
+//}
+
+Texture makeTexture(unsigned w, unsigned h, unsigned c, const void* pixels, bool isFloat)
 {
 	Texture retval{ 0 };
-	
-	unsigned f = 0;
+
+	GLenum f = 0, i = 0;
+
 	switch (c)
 	{
-	case 1: f = GL_RED;  break;
-	case 2: f = GL_RG;   break;
-	case 3: f = GL_RGB;  break;
-	case 4: f = GL_RGBA; break;
+	case 0: f = GL_DEPTH_COMPONENT; i = GL_DEPTH24_STENCIL8; break;
+	case 1: f = GL_RED;  i  = GL_R32F;    break;
+	case 2: f = GL_RG;   i  = GL_RG32F;   break;
+	case 3: f = GL_RGB;  i  = GL_RGB32F;  break;
+	case 4: f = GL_RGBA; i  = GL_RGBA32F; break;
 	}
 
 	glGenTextures(1, &retval.handle);
 	glBindTexture(GL_TEXTURE_2D, retval.handle);
 
+	i = ((isFloat || c == 0) ? i : f);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, i, w, h, 0, f, 
+								(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, f, w, h, 0, f,
-								GL_UNSIGNED_BYTE, pixels);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	return retval;
@@ -192,4 +222,39 @@ void freeTexture(Texture &t)
 {
 	glDeleteTextures(1, &t.handle);
 	t = { 0 };
+}
+
+Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c,
+	bool hasDepth, unsigned nTargets, unsigned nFloatTargets)
+{
+	Framebuffer retval = { 0,w,h,nTargets + nFloatTargets,0,{0} };
+
+	glGenFramebuffers(1, &retval.handle);
+	glBindFramebuffer(GL_FRAMEBUFFER, retval.handle);
+
+	if (hasDepth)
+	{
+		retval.depthTarget = makeTexture(w, h, 0, 0, 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+											retval.depthTarget.handle, 0);
+	}
+
+	const GLenum attatchments[8] = 
+		{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+		  GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5,
+		  GL_COLOR_ATTACHMENT6, GL_COLOR_ATTACHMENT7};
+
+	for (int i = 0; i < retval.nTargets && i < 8; ++i)
+	{
+		retval.targets[i] = makeTexture(w, h, c, 0, i >= nTargets);
+		glFramebufferTexture(GL_FRAMEBUFFER, attatchments[i], retval.targets[i].handle, 0);
+	}
+	glDrawBuffers(retval.nTargets, attatchments);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	return retval;
+}
+
+void freeFramebuffer(Framebuffer &fb)
+{
+
 }

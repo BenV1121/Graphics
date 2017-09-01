@@ -116,6 +116,8 @@
     <None Include="lambert.vert" />
     <None Include="mvplite.frag" />
     <None Include="mvplite.vert" />
+    <None Include="quad.frag" />
+    <None Include="quad.vert" />
     <None Include="standard.frag" />
     <None Include="standard.vert" />
     <None Include="test.frag" />
