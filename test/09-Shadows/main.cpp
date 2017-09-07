@@ -34,7 +34,7 @@ int main()
 
 	// Cube
 	Geometry  cube_geo = loadGeometry("../../resources/models/cube.obj");
-	glm::mat4 cube_model = glm::translate(glm::vec3(2, -1, -1));
+	glm::mat4 cube_model = glm::translate(glm::vec3(2, .5, -2));
 
 
 	// Camera
@@ -44,7 +44,7 @@ int main()
 	glm::mat4 cam_proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 10.f);
 
 	// Light
-	glm::vec3 light_dir  = glm::normalize(glm::vec3(-.8, -1, -1));
+	glm::vec3 light_dir  = glm::normalize(glm::vec3(.8, -2, -1));
 	glm::mat4 light_proj = glm::ortho<float>(-10, 10, -10, 10, -10, 10);
 	glm::mat4 light_view = glm::lookAt(-light_dir, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 
@@ -63,6 +63,8 @@ int main()
 	{
 		float time = context.getTime();
 
+		ss_model = glm::rotate(time, glm::vec3(0, 1, 0));
+
 		// Shadow Pass
 		setFlags(RenderFlag::DEPTH);
 		clearFramebuffer(fb_shadow, false, true);
@@ -72,18 +74,20 @@ int main()
 		s0_draw(fb_shadow, shdr_shadow, floor_geo); // draw floor
 
 		loc = slot = 0;
-		setUniforms(shdr_shadow, loc, slot, light_proj, light_view, ss_model);
-		s0_draw(fb_shadow, shdr_shadow, ss_geo); // draw soulspear
-
-		loc = slot = 0;
 		setUniforms(shdr_shadow, loc, slot, light_proj, light_view, cube_model);
 		s0_draw(fb_shadow, shdr_shadow, cube_geo); // draw cube
 
+
+		loc = slot = 0;
+		setUniforms(shdr_shadow, loc, slot, light_proj, light_view, ss_model);
+		s0_draw(fb_shadow, shdr_shadow, ss_geo); // draw soulspear
+
+		
 		// Light Pass
 		setFlags(RenderFlag::DEPTH);
 		clearFramebuffer(screen);
 		
-		loc = 0, slot = 0;
+		loc = slot = 0;
 
 		setUniforms(shdr_direct, loc, slot,			// standard data
 					cam_proj, cam_view,				// camera data
@@ -92,7 +96,7 @@ int main()
 					fb_shadow.depthTarget);			// shadowmap
 		s0_draw(screen, shdr_direct, floor_geo);
 
-		loc = 0, slot = 0;
+		loc = slot = 0;
 
 		setUniforms(shdr_direct, loc, slot,
 					cam_proj, cam_view,
@@ -101,7 +105,7 @@ int main()
 					fb_shadow.depthTarget);
 		s0_draw(screen, shdr_direct, ss_geo);
 
-		loc = 0, slot = 0;
+		loc = slot = 0;
 
 		setUniforms(shdr_direct, loc, slot,
 					cam_proj, cam_view,
