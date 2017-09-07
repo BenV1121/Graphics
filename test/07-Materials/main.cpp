@@ -81,7 +81,7 @@ int main()
 		setFlags(RenderFlag::DEPTH);
 
 		loc = 0, slot = 0;
-		setUniforms(fsq_shader, loc, slot, fBuffer.targets[3]);
+		setUniforms(fsq_shader, loc, slot, fBuffer.targets[1], fBuffer.targets[2]);
 
 		s0_draw(screen, fsq_shader, quad);
 

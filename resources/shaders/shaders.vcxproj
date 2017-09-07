@@ -112,12 +112,16 @@
   <ItemGroup>
     <None Include="cube.frag" />
     <None Include="cube.vert" />
+    <None Include="direct.frag" />
+    <None Include="direct.vert" />
     <None Include="lambert.frag" />
     <None Include="lambert.vert" />
     <None Include="mvplite.frag" />
     <None Include="mvplite.vert" />
     <None Include="quad.frag" />
     <None Include="quad.vert" />
+    <None Include="shadow.frag" />
+    <None Include="shadow.vert" />
     <None Include="standard.frag" />
     <None Include="standard.vert" />
     <None Include="test.frag" />
