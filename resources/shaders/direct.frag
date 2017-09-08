@@ -4,6 +4,10 @@ layout(location = 3) uniform mat4 lproj;
 layout(location = 4) uniform mat4 lview;
 layout(location = 5) uniform sampler2D shadowmap;
 
+layout(location = 6) uniform mat4 lproj1;
+layout(location = 7) uniform mat4 lview1;
+layout(location = 8) uniform sampler2D shadowmap1;
+
 in vec2 vUV;
 in vec4 vPos;
 
@@ -22,12 +26,16 @@ float pcf(in sampler2D shadowMap, in vec4 shadowPosition, int iterations);
 void main()
 {
 	vec4 sUV = clipToUV * lproj * lview * vPos;
-
 	float visibility = 1;
-	//if(texture(shadowmap,sUV.xy).r < sUV.z - shadowBias)
 	visibility = pcf(shadowmap, sUV, 16);
+	
 
-	outColor = vec4(1,0,0,1) * visibility;
+	vec4 sUV1 = clipToUV * lproj1 * lview1 * vPos;
+	float visibility1 = 1;
+	visibility1 = pcf(shadowmap1, sUV1, 16);
+
+
+	outColor = vec4(1,0,0,1) * visibility + vec4(1,1,0,1) * visibility1;
 }
 
 float pcf(in sampler2D shadowMap, in vec4 shadowPosition, int iterations)
