@@ -145,5 +145,3 @@ int main()
 	context.term();
 	return 0;
 }
-
-// Eat a dick, James.
