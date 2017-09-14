@@ -118,6 +118,7 @@
     <None Include="cube.vert" />
     <None Include="direct.frag" />
     <None Include="direct.vert" />
+    <None Include="Feedback.vert" />
     <None Include="gpass.frag" />
     <None Include="gpass.vert" />
     <None Include="lambert.frag" />

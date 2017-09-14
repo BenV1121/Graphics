@@ -9,6 +9,7 @@ in mat4 vTBN;
 in vec3 vNormal;
 in vec4 ParticleColor;
 
+uniform sampler2D sprite;
 // Camera
 layout(location = 1) uniform mat4 view;
 

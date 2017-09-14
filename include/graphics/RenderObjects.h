@@ -1,5 +1,11 @@
 #pragma once
 
+#include "glm\ext.hpp"
+#include "..\include\graphics\Vertex.h"
+
+#include <iostream>
+#include <vector>
+
 //declare our vertex
 struct Vertex;
 
@@ -47,3 +53,19 @@ struct Framebuffer
 
 Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c,
 	bool hasDepth, unsigned nTargets, unsigned nFloatTargets);
+
+struct Particle
+{
+	glm::vec2 position, velocity;
+	glm::vec4 color;
+	float life;
+
+	Particle()
+		: position(0.0f), velocity(0.0f), color(1.0f), life(0.0f) {}
+};
+
+//unsigned int nr_particles = 500;
+//std::vector<Particle> particles;
+//
+//for (GLuint i = 0; i < nr_particles: ++i)
+//	particles.push)

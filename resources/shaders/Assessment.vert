@@ -25,10 +25,9 @@ out vec4 ParticleColor;
 uniform mat4 projection;
 uniform vec2 offset;
 uniform vec4 color;
+
 void main()
 {
-	gl_Position = proj * view * model * position;
-
 	vTBN = model * mat4(tangent, bitangent, normal, vec4(0,0,0,0));
 	vUV  = texcoord;
 	vPos = (model * position).xyz;
@@ -37,4 +36,7 @@ void main()
 	float scale 10.0f;
 	TexCoords = vertex.zw;
 	ParticleColor = color;
+
+	gl_Position = proj * vec4((vertex.xy * scale) + offset, 0.0, 1.0);
+
 }

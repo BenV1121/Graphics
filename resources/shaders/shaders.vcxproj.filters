@@ -87,5 +87,8 @@
     <None Include="Assessment.frag">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="Feedback.vert">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

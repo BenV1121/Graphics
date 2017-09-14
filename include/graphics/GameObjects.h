@@ -54,26 +54,6 @@ struct DirectionalLight
 	float intensity; // 3
 };
 
-struct Particle
-{
-	Particle()
-		: m_Position(0)
-		, m_Velocity(0)
-		, m_Color(0)
-		, m_fRotate(0)
-		, m_fAge(0)
-		, m_fLifeTime(0)
-	{}
-
-	glm::vec3 m_Position;
-	glm::vec3 m_Velocity;
-	glm::vec4 m_Color;
-	float m_fRotate;
-	float m_fSize;
-	float m_fAge;
-	float m_fLifeTime;
-};
-
 namespace __internal
 {
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);
