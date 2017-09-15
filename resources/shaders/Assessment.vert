@@ -14,6 +14,9 @@ layout(location = 1)uniform mat4 view;
 // Model
 layout(location = 2)uniform mat4 model;
 
+// Particle
+//layout(location = 0) in vec4 vertex;
+
 // output to frag shader
 out vec2 vUV;
 out vec3 vPos;
@@ -33,10 +36,10 @@ void main()
 	vPos = (model * position).xyz;
 	vNormal = (model * normal).xyz;
 
-	float scale 10.0f;
-	TexCoords = vertex.zw;
-	ParticleColor = color;
+	float scale = 10.0f;
+	//TexCoords = vertex.zw;
+	//ParticleColor = color;
 
-	gl_Position = proj * vec4((vertex.xy * scale) + offset, 0.0, 1.0);
+	gl_Position = proj * view * model * position;
 
 }

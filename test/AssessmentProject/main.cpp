@@ -45,7 +45,6 @@ void main()
 	dlights[0].direction = glm::vec3(1, -1, 1);
 
 	Shader gpass = loadShader("../../resources/shaders/assessment.vert", "../../resources/shaders/assessment.frag");
-
 	Framebuffer screen = { 0,1280,720 };
 	Framebuffer gbuffer = makeFramebuffer(1280, 720,  4, true,  2, 2);
 	Framebuffer lbuffer = makeFramebuffer(1280, 720,  4, false, 2, 0);
@@ -60,6 +59,10 @@ void main()
 		loc = slot = 0;
 		setUniforms(gpass, loc, slot, cam, objects[0], dlights[0]);
 		s0_draw(screen, gpass, objects[0].geo);
+
+		//loc = slot = 0;
+		//setUniforms(geoShade, loc, slot, cam, objects[0], dlights[0]);
+		//s0_draw(screen, geoShade, objects[0].geo);
 	}
 	context.term();
 }

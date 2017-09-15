@@ -74,6 +74,26 @@ Shader loadShader(const char *vpath, const char *fpath)
 	return retval;
 }
 
+Shader loadGeoShader(const char *vpath, const char *gpath)
+{
+	Shader retval = { 0 };
+	if (vpath == nullptr || gpath == nullptr)
+	{
+		return retval;
+	}
+	std::string fvsource = readFile(vpath);
+	std::string ffsource = readFile(gpath);
+
+	const char *vsource = fvsource.c_str();
+	const char *gsource = ffsource.c_str();
+
+	retval = makeShader(vsource, gsource);
+
+	return retval;
+}
+
+
+
 #include <random>
 glm::vec4 randColor()
 {

@@ -31,6 +31,8 @@ struct Shader
 };
 
 Shader makeShader(const char *vsource, const char *fsource);
+Shader loadUpdateShader(const char *vert_path);
+Shader makeUpdateShader(const char *vert_src);
 void freeShader(Shader &);
 
 
@@ -63,6 +65,19 @@ struct Particle
 	Particle()
 		: position(0.0f), velocity(0.0f), color(1.0f), life(0.0f) {}
 };
+
+struct ParticleVertex
+{
+	glm::vec4 position;
+	glm::vec3 velocity;
+	glm::vec4 color;
+};
+
+
+struct ParticleBuffer { unsigned handle[2], vbo[2], size; };
+
+ParticleBuffer makeParticleBuffer(const ParticleBuffer *parts, size_t psize);
+
 
 //unsigned int nr_particles = 500;
 //std::vector<Particle> particles;

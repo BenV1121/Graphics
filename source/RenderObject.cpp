@@ -156,6 +156,17 @@ Shader makeShader(const char *vsource, const char *fsource)
 	return retval;
 }
 
+Shader loadUpdateShader(const char *vert_path)
+{
+
+}
+
+Shader makeUpdateShader(const char *vert_src)
+{
+
+}
+
+
 void freeShader(Shader &s)
 {
 	glDeleteProgram(s.handle);
@@ -259,3 +270,7 @@ void freeFramebuffer(Framebuffer &fb)
 
 }
 
+ParticleBuffer makeParticleBuffer(const ParticleBuffer *parts, size_t psize)
+{
+
+}
