@@ -93,5 +93,8 @@
     <None Include="Feedback.geo">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="Cubemap.frag">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -24,7 +24,6 @@ void main()
 	
 	SpecGloss objects[4];
 
-
 	// Floor
 	objects[0].geo = quad;
 	objects[0].model = glm::rotate(glm::radians(90.f), glm::vec3(-1, 0, 0))

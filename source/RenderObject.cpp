@@ -235,6 +235,27 @@ void freeTexture(Texture &t)
 	t = { 0 };
 }
 
+CubeTexture loadCubeMap(const char * path_Xpos, const char * path_Xneg, const char * path_Ypos, const char * path_Yneg, const char * path_Zpos, const char * path_Zneg)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+}
+
+CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void **pixels, bool isFloat)
+{
+	int width, height, nrChannels;
+	unsigned char *data;
+
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, w, h, 0, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[0], isFloat);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+}
+
 Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c,
 	bool hasDepth, unsigned nTargets, unsigned nFloatTargets)
 {
@@ -272,5 +293,20 @@ void freeFramebuffer(Framebuffer &fb)
 
 ParticleBuffer makeParticleBuffer(const ParticleBuffer *parts, size_t psize)
 {
+	ParticleBuffer retval = { 0 };
 
+	glGenVertexArrays(1, &retval.handle[0]);
+	glBindVertexArray(retval.handle[0]);
+	
+	GLfloat data[] = { 1,2,3,4,5 };
+
+	glGenBuffers(1, &retval.vbo[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STREAM_DRAW);
+
+	glGenBuffers(1, &retval.vbo[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), nullptr, GL_STREAM_DRAW);
+
+	return retval;
 }

@@ -38,6 +38,7 @@ void tf0_draw(const Framebuffer &f,
 	glBindFramebuffer(GL_FRAMEBUFFER, f.handle);
 	glUseProgram(s.handle);
 	
+	glViewport(0, 0, f.width, f.height);
 }
 
 void setUniform(const Shader &s, int location, float value)
@@ -88,6 +89,12 @@ namespace __internal
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::mat4 &val)
 	{
 		glProgramUniformMatrix4fv(s.handle, loc_io++, 1, 0, glm::value_ptr(val));
+	}
+	void t_setUniform(const Shader & s, int & loc_io, int & tex_io, const CubeTexture & val)
+	{
+		glActiveTexture(GL_TEXTURE0 + tex_io);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, val.handle);
+		glProgramUniform1i(s.handle, loc_io++, tex_io++);
 	}
 }
 

@@ -46,6 +46,18 @@ Texture makeTexture(unsigned w, unsigned h, unsigned c, const void *pixels, bool
 
 void freeTexture(Texture &t);
 
+struct CubeTexture
+{
+	unsigned handle;
+};
+
+CubeTexture loadCubeMap(const char *path_Xpos, const char *path_Xneg,
+						const char *path_Ypos, const char *path_Yneg,
+						const char *path_Zpos, const char *path_Zneg);
+
+CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c,
+						const void **pixels, bool isFloat = false);
+
 struct Framebuffer
 {
 	unsigned handle, width, height, nTargets;
@@ -54,6 +66,16 @@ struct Framebuffer
 };
 
 Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c,
+	bool hasDepth, unsigned nTargets, unsigned nFloatTargets);
+
+struct CubeFrameBuffer
+{
+	unsigned handle, width, height, nTargets;
+	Texture depthTarget;
+	Texture targets[8];
+};
+
+CubeFrameBuffer makeCubeFrameBuffer(unsigned w, unsigned h, unsigned c,
 	bool hasDepth, unsigned nTargets, unsigned nFloatTargets);
 
 struct Particle
@@ -77,6 +99,7 @@ struct ParticleVertex
 struct ParticleBuffer { unsigned handle[2], vbo[2], size; };
 
 ParticleBuffer makeParticleBuffer(const ParticleBuffer *parts, size_t psize);
+
 
 
 //unsigned int nr_particles = 500;

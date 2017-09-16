@@ -5,6 +5,7 @@ struct Geometry;
 struct Shader;
 struct Framebuffer;
 struct Texture;
+struct CubeTexture;
 
 #include <glm\fwd.hpp>
 
@@ -29,6 +30,7 @@ namespace __internal
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::vec3 &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::vec4 &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::mat4 &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const CubeTexture &val);
 }
 
 template<typename T, typename ...U>

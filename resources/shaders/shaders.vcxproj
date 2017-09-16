@@ -116,6 +116,7 @@
     <None Include="cpass.vert" />
     <None Include="cube.frag" />
     <None Include="cube.vert" />
+    <None Include="Cubemap.frag" />
     <None Include="direct.frag" />
     <None Include="direct.vert" />
     <None Include="Feedback.geo" />
