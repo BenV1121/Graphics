@@ -50,6 +50,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10-Deferred", "test\10-Defe
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssessmentProject", "test\AssessmentProject\AssessmentProject.vcxproj", "{073D56FE-BFBD-49E8-A4B1-F6B6DD3FEBD3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0670EF0A-AB28-4050-9DA3-C68D1C5D6BEA} = {0670EF0A-AB28-4050-9DA3-C68D1C5D6BEA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

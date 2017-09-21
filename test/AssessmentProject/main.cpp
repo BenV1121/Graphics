@@ -21,6 +21,9 @@ void main()
 	unsigned quadidx[] = { 0,1,3, 1,2,3 };
 	solveTangents(vquad, 4, quadidx, 6);
 	Geometry quad = makeGeometry(vquad, 4, quadidx, 6);
+
+	Geometry skycube = loadGeometry("../../resources/models/cube.obj");
+	glm::mat4 model;
 	
 	SpecGloss objects[4];
 
@@ -30,6 +33,10 @@ void main()
 		*glm::scale(glm::vec3(5, 5, 1));
 	objects[0].diffuse = loadTexture("../../resources/textures/sand.jpg");
 	objects[0].gloss = 4;
+
+	CubeTexture lcb = loadCubeMap("../../resources/textures/skybox/dejavu_bk.tga", "../../resources/textures/skybox/dejavu_ft.tga",
+								  "../../resources/textures/skybox/dejavu_up.tga", "../../resources/textures/skybox/dejavu_dn.tga",
+								  "../../resources/textures/skybox/dejavu_rt.tga", "../../resources/textures/skybox/dejavu_zt.tga");
 
 	// Camera
 	Camera cam;
@@ -43,7 +50,7 @@ void main()
 	dlights[0].color = glm::vec4(1, 1, 0, 1);
 	dlights[0].direction = glm::vec3(1, -1, 1);
 
-	Shader gpass = loadShader("../../resources/shaders/assessment.vert", "../../resources/shaders/assessment.frag");
+	Shader gpass = loadShader("../../resources/shaders/Cubemap.vert", "../../resources/shaders/Cubemap.frag");
 	Framebuffer screen = { 0,1280,720 };
 	Framebuffer gbuffer = makeFramebuffer(1280, 720,  4, true,  2, 2);
 	Framebuffer lbuffer = makeFramebuffer(1280, 720,  4, false, 2, 0);
@@ -55,9 +62,11 @@ void main()
 		clearFramebuffer(screen);
 		setFlags(RenderFlag::DEPTH);
 
+		glm::mat4 model = glm::rotate((float)context.getTime(), glm::vec3(0.f, 1.f, 0.f)); //* glm::scale(glm::vec3(1,1,1))
+
 		loc = slot = 0;
-		setUniforms(gpass, loc, slot, cam, objects[0], dlights[0]);
-		s0_draw(screen, gpass, objects[0].geo);
+		setUniforms(gpass, loc, slot, cam, model, lcb);
+		s0_draw(gbuffer, gpass, skycube);
 
 		//loc = slot = 0;
 		//setUniforms(geoShade, loc, slot, cam, objects[0], dlights[0]);

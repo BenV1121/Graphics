@@ -117,6 +117,7 @@
     <None Include="cube.frag" />
     <None Include="cube.vert" />
     <None Include="Cubemap.frag" />
+    <None Include="Cubemap.vert" />
     <None Include="direct.frag" />
     <None Include="direct.vert" />
     <None Include="Feedback.geo" />

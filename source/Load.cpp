@@ -26,6 +26,25 @@ Texture loadTexture(const char *path)
 	return retval;
 }
 
+CubeTexture loadCubeMap(const char * path_Xpos, const char * path_Xneg, const char * path_Ypos, const char * path_Yneg, const char * path_Zpos, const char * path_Zneg)
+{
+	CubeTexture retval = { 0 };
+
+	int w, h, c;
+	const void **pixels = new const void *;
+
+	pixels[0] = stbi_load(path_Xpos, &w, &h, &c, STBI_default);
+	pixels[1] = stbi_load(path_Xneg, &w, &h, &c, STBI_default);
+	pixels[2] = stbi_load(path_Ypos, &w, &h, &c, STBI_default);
+	pixels[3] = stbi_load(path_Yneg, &w, &h, &c, STBI_default);
+	pixels[4] = stbi_load(path_Zpos, &w, &h, &c, STBI_default);
+	pixels[5] = stbi_load(path_Zneg, &w, &h, &c, STBI_default);
+
+	retval = makeCubeMap(w, h, c, pixels);
+
+	return retval;
+}
+
 #include <fstream>
 #include <iostream>
 #include <string>

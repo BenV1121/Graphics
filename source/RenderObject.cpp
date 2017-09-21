@@ -158,12 +158,12 @@ Shader makeShader(const char *vsource, const char *fsource)
 
 Shader loadUpdateShader(const char *vert_path)
 {
-
+	return Shader();
 }
 
 Shader makeUpdateShader(const char *vert_src)
 {
-
+	return Shader();
 }
 
 
@@ -235,25 +235,39 @@ void freeTexture(Texture &t)
 	t = { 0 };
 }
 
-CubeTexture loadCubeMap(const char * path_Xpos, const char * path_Xneg, const char * path_Ypos, const char * path_Yneg, const char * path_Zpos, const char * path_Zneg)
-{
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-}
 
 CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void **pixels, bool isFloat)
 {
-	int width, height, nrChannels;
-	unsigned char *data;
+	CubeTexture retval{ 0 };
 
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, w, h, 0, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[0], isFloat);
+	GLenum f = 0, i = 0;
+
+	switch (c)
+	{
+	case 0: f = GL_DEPTH_COMPONENT; i = GL_DEPTH24_STENCIL8; break;
+	case 1: f = GL_RED;  i = GL_R32F;    break;
+	case 2: f = GL_RG;   i = GL_RG32F;   break;
+	case 3: f = GL_RGB;  i = GL_RGB32F;  break;
+	case 4: f = GL_RGBA; i = GL_RGBA32F; break;
+	}
+
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[0]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[1]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[2]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[3]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[4]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[5]);
+
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+	return retval;
 }
 
 Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c,
@@ -308,5 +322,35 @@ ParticleBuffer makeParticleBuffer(const ParticleBuffer *parts, size_t psize)
 	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), nullptr, GL_STREAM_DRAW);
 
+	return retval;
+}
+
+CubeFrameBuffer makeCubeFrameBuffer(unsigned w, unsigned h, unsigned c,
+	bool hasDepth, unsigned nTargets, unsigned nFloatTargets)
+{
+	CubeFrameBuffer retval = { 0,w,h,nTargets + nFloatTargets,0,{ 0 } };
+
+	glGenFramebuffers(1, &retval.handle);
+	glBindFramebuffer(GL_FRAMEBUFFER, retval.handle);
+
+	if (hasDepth)
+	{
+		retval.depthTarget = makeTexture(w, h, 0, 0, 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+			retval.depthTarget.handle, 0);
+	}
+
+	const GLenum attatchments[8] =
+	{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+		GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5,
+		GL_COLOR_ATTACHMENT6, GL_COLOR_ATTACHMENT7 };
+
+	for (int i = 0; i < retval.nTargets && i < 8; ++i)
+	{
+		retval.targets[i] = makeTexture(w, h, c, 0, i >= nTargets);
+		glFramebufferTexture(GL_FRAMEBUFFER, attatchments[i], retval.targets[i].handle, 0);
+	}
+	glDrawBuffers(retval.nTargets, attatchments);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	return retval;
 }
